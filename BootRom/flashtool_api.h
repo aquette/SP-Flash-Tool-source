@@ -305,6 +305,8 @@ typedef struct {
 
 #define RESET_BY_PWR_KEY_ALONE	0x50	// 'P'
 #define RESET_BY_PWR_HOME_KEY	0x68	// 'h' - default(everything other than 'P' means 'h')
+#define RESET_DISABLE           0x72    // disable long press reboot feature.
+
 	unsigned char                           m_reset_key; // power key reset, or power+home key reset
 
 	//add for DRAM flip test set connect which DA, 1st or 2nd
@@ -901,7 +903,7 @@ typedef struct {
 	uint32 force_provision; //default 0
 	uint32 tw_size_gb; // default 0xFFFFFFFF
 	uint32 tw_no_red;  // default 1
-	uint32 hpb_count; //default 0xFFFFFFFF
+	uint32 hpb_size_gb; //default 0xFFFFFFFF
 }UFS_Config;
 LIBEXPORT int __stdcall FlashTool_SetUFSConfig(FLASHTOOL_API_HANDLE_T  ft_handle, UFS_Config* cfg);
 
@@ -1252,7 +1254,7 @@ typedef struct{
 
 LIBEXPORT int __stdcall FlashTool_GetRSCCnt(const char* rsc_filename, unsigned int* cnt);
 LIBEXPORT int __stdcall FlashTool_GetRSCInfo(const char* rsc_filename, proj_item* rscinfo, unsigned int rsccnt);
-LIBEXPORT int __stdcall FlashTool_SetRSCInfo(FLASHTOOL_API_HANDLE_T ft_handle, proj_item* da_rsc);
+LIBEXPORT int __stdcall FlashTool_SetRSCInfo(FLASHTOOL_API_HANDLE_T ft_handle, const char* rsc_file, proj_item* da_rsc);
 //rsc end
 
 LIBEXPORT int __stdcall FlashTool_GetHRID(FLASHTOOL_API_HANDLE_T ft_handle, unsigned char* hrid_buf, unsigned int hrid_buflen, bool log = false);

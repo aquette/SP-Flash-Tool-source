@@ -103,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #if defined(_LINUX)
     FileUtils::copy_99ttyacms_file(true);
+    FileUtils::runModemManagerCmd();
 #endif
 }
 
@@ -556,7 +557,7 @@ QSharedPointer<APCore::RSCSetting> MainWindow::CreateRSCSetting()
     }
     setting->setRSCIndex(index);    
     setting->setRSCOperatorName(download_widget->GetRSCOperatorName(rscProjName));
-
+    setting->setRSCFilePath(download_widget->GetRSCFilePath());
     return setting;
 }
 

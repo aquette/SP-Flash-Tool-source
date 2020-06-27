@@ -59,6 +59,8 @@ static const string CONSOLE_MODE_USAGE(
         "          flash_tool -o -i config.xml\n"
         "  --disable_storage_life_cycle_check  disable storage life cycle check feature.\n"
         "          flash_tool -s MT6575_Anroid_scatter.txt -c download --disable_storage_life_cycle_check\n"
+        "  -a, --auth_file    authentication file path.\n"
+        "          flash_tool -a auth_file.auth -s MT6575_Anroid_scatter.txt -c download\n"
         "  -h, --help    display help infomation and exit.\n"
         "          flash_tool -h\n"
         );
@@ -88,9 +90,11 @@ const static std::map<std::string, char>::value_type LONG_SHORT_ARG_INIT_VALUES[
     std::map<std::string, char>::value_type("reboot", 'b'),
     std::map<std::string, char>::value_type("disable_storage_life_cycle_check", '\0'),
     std::map<std::string, char>::value_type("help", 'h'),
-	std::map<std::string, char>::value_type("efuse_read_only", 'o')
+    std::map<std::string, char>::value_type("efuse_read_only", 'o'),
+    std::map<std::string, char>::value_type("auth_file", 'a')
 };
-const static std::map<string, char> LONG_SHORT_ARG_MAP(LONG_SHORT_ARG_INIT_VALUES, LONG_SHORT_ARG_INIT_VALUES+13);
+const static std::map<string, char> LONG_SHORT_ARG_MAP(LONG_SHORT_ARG_INIT_VALUES, LONG_SHORT_ARG_INIT_VALUES + \
+                                                       sizeof(LONG_SHORT_ARG_INIT_VALUES) / sizeof(LONG_SHORT_ARG_INIT_VALUES[0]));
 
 CommandLineArguments::CommandLineArguments()
     :m_szInputFilename(),
@@ -186,12 +190,13 @@ bool CommandLineArguments::Parse(int argc, char **argv)
       {"rsc", required_argument, NULL, RSC_ARG_TYPE},
       {"disable_storage_life_cycle_check", no_argument, NULL, STOR_LIFE_CYCLE_CHECK_ARG_TYPE},
       {"help", no_argument, NULL, 'h'},
+      {"auth_file", required_argument, NULL, 'a'},
       {0, 0, 0, 0}
     };
 
     while (1)
     {
-        int c = getopt_long(argc, argv, "i:d:c:s:p:rhbt:e:", longopts, NULL);
+        int c = getopt_long(argc, argv, "i:d:c:s:p:rhbt:e:a:", longopts, NULL);
 
         if (c == -1)
         {
@@ -296,6 +301,9 @@ bool CommandLineArguments::Parse(int argc, char **argv)
                 {
                     result = true;
                 }
+                break;
+            case 'a':
+                m_szAuthFilename = optarg;
                 break;
 
             default:
@@ -443,6 +451,10 @@ bool CommandLineArguments::Parse(int argc, char **argv)
                 {
                     result = true;
                 }
+                break;
+             case 'a':
+                if (++i >= argc) return false;
+                m_szAuthFilename = argv[i];
                 break;
              default: // deal with case of only long argument or invalid argument.
              {

@@ -225,7 +225,7 @@ bool AppCore::LoadScatter(
     {
         LOG("loading scatter (%d, %s)", key, scatter_file.c_str());
         int ret = core_handle->LoadScatter(type, scatter_file);
-        if(S_STOP == ret)
+        if(S_STOP == ret || STATUS_ABORT == ret)
         {
             THROW_USER_STOP;
         }
@@ -279,7 +279,7 @@ bool AppCore::VerifyImageChksum(const APKey key, const std::string &scatter_file
             int ret = DL_VerifyROMMemBuf(core_handle->dl_handle()->handle_t(),
                                      &chksum_arg, &chksum_res);
 
-            if(S_STOP == ret)
+            if(S_STOP == ret || STATUS_ABORT == ret)
             {
                 THROW_USER_STOP;
                 return false;
@@ -329,7 +329,7 @@ bool AppCore::AutoLoadRomImages(const APKey key, const std::string &scatter_file
         THROW_APP_EXCEPTION(FT_INVALIDE_SESSION_KEY, "");
     }
     ret = core_handle->AutoLoadRomImages(scatter_file);
-    if(ret == S_STOP)
+    if(ret == S_STOP || STATUS_ABORT == ret)
     {
         THROW_USER_STOP;
     }

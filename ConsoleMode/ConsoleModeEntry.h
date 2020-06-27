@@ -18,7 +18,6 @@ public:
 private:
     ConsoleModeEntry(const ConsoleModeEntry &rhs);
     ConsoleModeEntry & operator=(const ConsoleModeEntry &rhs);
-    void CheckNewVersion();
     void CleanLogFiles(const std::string &log_path, qint64 clean_hours);
 
 private:

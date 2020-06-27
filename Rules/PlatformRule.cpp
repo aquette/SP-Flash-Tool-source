@@ -52,7 +52,7 @@ Platform::Platform() : name(), simple_name()
     is_default_da_dl_all_hs = false;
     dl_auto_detect_battery = true; // ?
     auto_format_all_support = true;
-    power_key_reset_support = false;
+    long_press_reboot_option = LONG_PRESS_REBOOT_HOME;
     is_auto_polling_enable = false;
     auto_polling_upper_limit = 0;
     set_boot_mode_support = false;
@@ -110,7 +110,13 @@ void Platform::LoadXML(const XML::Node &node)
     this->is_default_set_format_length = parseBoolean(temp);
 
     temp = node.GetAttribute("reset_key_configuration");
-    this->power_key_reset_support = (temp=="P");
+    if (temp == "P") {
+        this->long_press_reboot_option = LONG_PRESS_REBOOT_POWER;
+    } else if (temp == "DISABLE") {
+        this->long_press_reboot_option = LONG_PRESS_REBOOT_DISABLE;
+    } else {
+        this->long_press_reboot_option = LONG_PRESS_REBOOT_HOME;
+    }
 
     temp = node.GetAttribute("is_auto_polling_enable");
     this->is_auto_polling_enable = parseBoolean(temp);

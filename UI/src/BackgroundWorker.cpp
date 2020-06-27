@@ -66,7 +66,7 @@ void BackgroundWorker::run()
                     conn_setting_->CreateConnection(
                         session_id_,
                         storage_type,
-                        platform_setting_->supportPowerKeyReset()
+                        platform_setting_->longPressRebootOption()
                         ));
 		conn->setCallBack(question_cb);
 

@@ -9,7 +9,8 @@ namespace APCore
 RSCCommand::RSCCommand(APKey key):
     ICommand(key),
     m_rsc_index(0),
-    m_rsc_proj_name("")
+    m_rsc_proj_name(""),
+    m_rsc_file_path("")
 {
 }
 
@@ -30,9 +31,15 @@ void RSCCommand::exec(const QSharedPointer<APCore::Connection> &conn)
 		LOGE("error: rsc_full_proj_name or rsc_operator_name exceed range!");
         THROW_APP_EXCEPTION(S_INVALID_ARGUMENTS, "");
     }
+
+    if (m_rsc_file_path.empty())
+    {
+		LOGE("error: m_rsc_file_path is empty!");
+        THROW_APP_EXCEPTION(S_INVALID_ARGUMENTS, "");
+    }
     strcpy((char*)rsc_proj.full_project_name, (char*)m_rsc_proj_name.c_str());
     strcpy((char*)rsc_proj.op_name, (char*)m_rsc_operator_name.c_str());
-    int ret = FlashTool_SetRSCInfo(conn->FTHandle(), &rsc_proj);
+    int ret = FlashTool_SetRSCInfo(conn->FTHandle(), m_rsc_file_path.c_str(), &rsc_proj);
     if(ret != STATUS_OK)
     {
         LOGE("FlashTool_SetRSCInfo() failed! ret: %s(0x%x)", StatusToString(ret), ret);

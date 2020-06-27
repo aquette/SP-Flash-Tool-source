@@ -14,12 +14,13 @@
 
 QSharedPointer<USBSetting> USBSetting::inst;
 
-USBSetting::USBSetting(const std::string &setting_file, bool CertDL):
-    is_certDL(CertDL),prefer_com_port_(""), forbid_stop_(false)
+USBSetting::USBSetting(const std::string &setting_file):
+    prefer_com_port_(""), forbid_stop_(false)
 {
     XML::Document document(setting_file);
     const XML::Node root_node = document.GetRootNode();
     Q_ASSERT(root_node.GetName() == "usb-setting");
+    usbID_map_.clear();
 
     XML::Node child_node = root_node.GetFirstChildNode();
 
@@ -56,6 +57,10 @@ USBSetting::USBSetting(const std::string &setting_file, bool CertDL):
         {
            id_index = COMPOSITE_DA_VCOM;
         }
+        else
+        {
+            id_index++;
+        }
 
         usbID_map_[id_index] = infoPair;
 
@@ -63,19 +68,14 @@ USBSetting::USBSetting(const std::string &setting_file, bool CertDL):
     }
 }
 
-USBSetting *USBSetting::instance(bool CertDL /*= false*/)
+USBSetting *USBSetting::instance()
 {
     if(inst == NULL)
     {
         inst = QSharedPointer<USBSetting>(
-                    new USBSetting(ABS_PATH("usb_setting.xml"), CertDL));
+                    new USBSetting(ABS_PATH("usb_setting.xml")));
     }
     return inst.data();
-}
-
-void USBSetting::AddUSBInstance(USBInfoPair info)
-{
-     this->usb_port_pool_.push_back(info);
 }
 
 void USBSetting::AddUSBPool(usb_speed speedType)
@@ -84,30 +84,25 @@ void USBSetting::AddUSBPool(usb_speed speedType)
 
     switch(speedType)
     {
-    case NORMAL_SPEED:
-
-        AddUSBInstance(usbID_map_[BOOTROM_VCOM]);
-
-        if(!is_certDL)
-        {
-            AddUSBInstance(usbID_map_[PRELOADER_VCOM]);
+    case DA_HIGH_SPEED:
+        usb_port_pool_.push_back(usbID_map_[DA_HIGHSPEED_VCOM]);
 #ifdef LGE_PRELOADER_SUPPORT
-            AddUSBInstance(usbID_map_[COMPOSITE_PRELOADER_VCOM]);
+        usb_port_pool_.push_back(usbID_map_[COMPOSITE_DA_VCOM]);
 #endif
-        }
-
         break;
 
-    case DA_HIGH_SPEED:
-
-        if(!is_certDL)
-        {
-            AddUSBInstance(usbID_map_[DA_HIGHSPEED_VCOM]);
+    case NORMAL_SPEED:
+    default:
+        usb_port_pool_.push_back(usbID_map_[BOOTROM_VCOM]);
+        usb_port_pool_.push_back(usbID_map_[PRELOADER_VCOM]);
 #ifdef LGE_PRELOADER_SUPPORT
-            AddUSBInstance(usbID_map_[COMPOSITE_DA_VCOM]);
+        usb_port_pool_.push_back(usbID_map_[COMPOSITE_PRELOADER_VCOM]);
 #endif
+        if(usbID_map_.size()>COMPOSITE_DA_VCOM)
+        {
+            for(int i=COMPOSITE_DA_VCOM+1; i<usbID_map_.size(); i++)
+                usb_port_pool_.push_back(usbID_map_[i]);
         }
-
         break;
     }
 }

@@ -366,7 +366,7 @@ struct ex_ufs_config
 	uint32 force_provision; //default 0
 	uint32 tw_size_gb; // default 0xFFFFFFFF
 	uint32 tw_no_red;  // default 1
-	uint32 hpb_count; //default 0xFFFFFFFF
+	uint32 hpb_size_gb; //default 0xFFFFFFFF
 };
 
 #endif

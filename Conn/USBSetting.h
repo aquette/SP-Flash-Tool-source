@@ -33,7 +33,7 @@ typedef enum
 class USBSetting
 {
 public:
-    static USBSetting *instance(bool CertDL = false);
+    static USBSetting *instance();
 
     bool Search(int * stop_flag, int timeout);
 
@@ -44,16 +44,13 @@ public:
     void SetForibStop(bool forbid){forbid_stop_ = forbid;}
 
 private:
-    USBSetting(const std::string &setting_file, bool CertDL);
-    void AddUSBInstance(USBInfoPair info);
+    USBSetting(const std::string &setting_file);
     bool SearchUSBPortPool(USBScanArg *usb_scan_arg,
                            USBScanResult *usb_scan_result);
 
     std::list<USBInfoPair> usb_port_pool_;
 
     std::map<int, USBInfoPair>usbID_map_;
-
-    bool is_certDL;
 
     std::string usb_device_path_;
     std::string usb_friendly_name_;

@@ -314,6 +314,7 @@ QSharedPointer<APCore::EfuseSetting> CommandSetting::CreateEfuseSetting()
 QSharedPointer<APCore::RSCSetting> CommandSetting::CreateRSCSetting() const
 {
     QSharedPointer<APCore::RSCSetting> setting(new APCore::RSCSetting());
+    setting->setRSCFilePath(this->getRSCFileName().toStdString());
     return setting;
 }
 
@@ -453,6 +454,7 @@ void CommandSetting::addRSCSetting()
         rsc_setting->setRSCProjectName(m_rsc_proj_name);
         rsc_setting->setRSCIndex(index);
         rsc_setting->setRSCOperatorName(proj_operator);
+        rsc_setting->setRSCFilePath(this->getRSCFileName().toStdString());
         vAddSetting(rsc_setting);
         m_has_rsc_cmd = true;
     }

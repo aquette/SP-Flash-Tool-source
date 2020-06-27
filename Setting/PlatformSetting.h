@@ -80,8 +80,8 @@ public:
         return this->load_path_;
     }
 
-    bool supportPowerKeyReset() const {
-        return m_platform.supportPowerKeyReset();
+    LongPressRebootOption longPressRebootOption() const {
+        return m_platform.longPressRebootOption();
     }
 
     bool is_set_boot_mode_support(void) const

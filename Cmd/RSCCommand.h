@@ -29,10 +29,16 @@ public:
         m_rsc_operator_name = op_name;
     }
 
+	void setRSCFilePath(std::string rsc_path)
+    {
+        m_rsc_file_path = rsc_path;
+    }
+
 private:
     unsigned int m_rsc_index;
     std::string m_rsc_proj_name;
     std::string m_rsc_operator_name;
+    std::string m_rsc_file_path;
 };
 
 }

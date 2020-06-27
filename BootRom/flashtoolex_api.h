@@ -413,7 +413,7 @@ LIBEX_EXPORT status_t LIB_API flashtool_download_cert(HSESSION hs, const char* c
 //! <b>Returns</b>:  STATUS_OK if success, or other status indicate specified error.
 LIBEX_EXPORT status_t LIB_API flashtool_firmware_update(HSESSION hs, const char* fw_filename, const char* fw_buffer, uint32 fw_buffer_len);
 
-//!<b>Effects</b>: config ufs provision option: force_provision, tw_size, tw_no_red, hpb_count
+//!<b>Effects</b>: config ufs provision option: force_provision, tw_size_gb, tw_no_red, hpb_size_gb
 //!					hs:                the session handle
 //!					cfg:			 ufs config item
 //!

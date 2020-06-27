@@ -45,6 +45,12 @@ typedef enum{
     QUESTION_MSGBOX = 4
 }MessageBox_Type;
 
+typedef enum {
+    LONG_PRESS_REBOOT_POWER = 0,
+    LONG_PRESS_REBOOT_HOME = 1,
+    LONG_PRESS_REBOOT_DISABLE = 2
+} LongPressRebootOption;
+
 #define ENUM_TO_STRING(case_id)\
     case case_id:\
         return #case_id;

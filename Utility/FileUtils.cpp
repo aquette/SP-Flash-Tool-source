@@ -15,6 +15,7 @@
 #include <iomanip>
 #include <cerrno>
 #include <cstring>
+#include <cstdlib>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -24,6 +25,7 @@
 
 #include "../Host/Inc/RuntimeMemory.h"
 #include "../Utility/Utils.h"
+#include "../Utility/IniItem.h"
 //Log files
 #include "../Logger/Log.h"
 #include "../BootRom/brom.h"
@@ -704,4 +706,22 @@ bool FileUtils::IsValidKernelVersion()
         return is_valid_kernel;
     }
 }
+
+void FileUtils::runModemManagerCmd()
+{
+    IniItem item("option.ini", "ModemManager", "RunModemManagerCmd");
+    if (item.GetBooleanValue()) {
+        std::string modemmanager_cmd_file = FileUtils::AbsolutePath("modemmanagercmd.sh");
+        if (QFileInfo(QString::fromStdString(modemmanager_cmd_file)).exists()) {
+            system("sudo chmod +x modemmanagercmd.sh");
+            system("sudo ./modemmanagercmd.sh &");
+            LOG("running \"sudo ./modemmanagercmd.sh &\" cmd in background!");
+        } else {
+            LOG("modemmanagercmd.sh file is NOT exists.");
+        }
+    } else {
+        LOG("NO need to run \"sudo ./modemmanagercmd.sh &\" cmd.");
+    }
+}
+
 #endif

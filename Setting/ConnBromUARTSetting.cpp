@@ -29,7 +29,7 @@ ConnBromUARTSetting::ConnBromUARTSetting(const XML::Node &node)
 }
 
 Connection *ConnBromUARTSetting::CreateConnection(
-        APKey key, HW_StorageType_E stor, bool pwr_key_reset)
+        APKey key, HW_StorageType_E stor, LongPressRebootOption pwr_key_reset_option)
 {
     BromBootArg args;
 
@@ -47,8 +47,13 @@ Connection *ConnBromUARTSetting::CreateConnection(
 
     ft_conn_arg.m_force_charge = FORCE_CHARGE_AUTO;
 
-    ft_conn_arg.m_reset_key =
-        pwr_key_reset ? RESET_BY_PWR_KEY_ALONE : RESET_BY_PWR_HOME_KEY;
+    if (pwr_key_reset_option == LONG_PRESS_REBOOT_POWER) {
+        ft_conn_arg.m_reset_key = RESET_BY_PWR_KEY_ALONE;
+    } else if (pwr_key_reset_option == LONG_PRESS_REBOOT_DISABLE) {
+        ft_conn_arg.m_reset_key = RESET_DISABLE;
+    } else {
+        ft_conn_arg.m_reset_key = RESET_BY_PWR_HOME_KEY;
+    }
 
     ft_conn_arg.m_boot_arg.m_baudrate = get_baudrate();
 

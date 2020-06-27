@@ -25,7 +25,7 @@ public:
     ConnBromUSBSetting(const XML::Node &node);
 
     virtual Connection *CreateConnection(
-            APKey key, HW_StorageType_E stor, bool pwr_key_reset);
+            APKey key, HW_StorageType_E stor, LongPressRebootOption pwr_key_reset_option);
 
     virtual void LoadXML(const XML::Node &node);
     virtual void SaveXML(XML::Node &node) const;

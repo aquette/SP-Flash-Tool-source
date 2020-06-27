@@ -67,27 +67,6 @@ ConsoleModeEntry::~ConsoleModeEntry()
     }
 }
 
-void ConsoleModeEntry::CheckNewVersion()
-{
-    QStringList parameter;
-
-    std::string version = ToolInfo::VersionNum();
-
-    parameter << "-i"
-              << "update.ini"
-              << "-v"
-              << version.c_str();
-
-    std::string exePath = "\"" + FileUtils::GetAppDirectory()
-            + "/FlashToolUpdater.exe" + "\"";
-
-    LOGI("Update exe path: %s", exePath.c_str());
-
-    QProcess::startDetached(exePath.c_str(), parameter);
-
-    exit(0);
-}
-
 void ConsoleModeEntry::CleanLogFiles(const std::string &log_path, qint64 clean_hours)
 {
     qint64 earlier_hours = -clean_hours; //the earlier time means the time before current time
@@ -159,6 +138,7 @@ int ConsoleModeEntry::Run(int argc, char *argv[])
 
 #if defined(_LINUX)
         FileUtils::copy_99ttyacms_file();
+        FileUtils::runModemManagerCmd();
 #endif
 
         //check validation of command setting
@@ -192,7 +172,7 @@ int ConsoleModeEntry::Run(int argc, char *argv[])
         conn_setting->set_stop_flag(&stop_flag);
         QSharedPointer<APCore::Connection> conn(
                     conn_setting->CreateConnection(
-                        session_id, storage, false/*come from nowhere@@*/));
+                        session_id, storage, LONG_PRESS_REBOOT_HOME/*come from nowhere@@*/));
         LOGI("Connection create done!");
 
         bool is_combo_fmt_ = config.fgIsCommboFmt(app,session_id);

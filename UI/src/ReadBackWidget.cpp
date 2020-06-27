@@ -520,7 +520,8 @@ void ReadBackWidget::on_toolButton_add_clicked()
 
     int row = ui_->tableWidget->rowCount();
     QString path = FileUtils::GetAppDirectory().c_str();
-    path += QDir::separator() + kDefaultFilePrefix + QString::number(row);
+    static int file_index = 0;
+    path += QDir::separator() + kDefaultFilePrefix + QString::number(file_index++);
     path = QDir::toNativeSeparators(path);
 
     bool scatter_ver2 = main_window_->IsScatterVer2();

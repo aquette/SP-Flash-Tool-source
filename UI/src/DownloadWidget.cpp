@@ -542,6 +542,11 @@ std::string DownloadWidget::GetRSCOperatorName(std::string rscProjName)
     return ""; //not found
 }
 
+std::string DownloadWidget::GetRSCFilePath(void)
+{
+	return m_rsc_file_path;
+}
+
 void DownloadWidget::Init_RSC_list(void)
 {
     ui_->comboBox_rsc->clear();
@@ -571,11 +576,11 @@ void DownloadWidget::Process_rsc(QString rsc_filename)
         {
             LOG("rsc exist");
             ShowRSCItem(true);
-            std::string rsc = rsc_filename.toLocal8Bit().constData();
-            LOG("rsc file: %s", rsc.c_str());
+            m_rsc_file_path = rsc_filename.toLocal8Bit().constData();
+            LOG("rsc file: %s", m_rsc_file_path.c_str());
 
             try{
-                unsigned int ret = FlashTool_GetRSCCnt(rsc.c_str(), &m_rsc_cnt);
+                unsigned int ret = FlashTool_GetRSCCnt(m_rsc_file_path.c_str(), &m_rsc_cnt);
                 if(STATUS_OK != ret)
                 {
                     char err_msg[512] = {0};
@@ -612,7 +617,7 @@ void DownloadWidget::Process_rsc(QString rsc_filename)
                     return;
                 }
 
-                ret = FlashTool_GetRSCInfo(rsc.c_str(), m_rsc_p_info, m_rsc_cnt);
+                ret = FlashTool_GetRSCInfo(m_rsc_file_path.c_str(), m_rsc_p_info, m_rsc_cnt);
                 if(STATUS_OK != ret)
                 {
                     char err_msg[512] = {0};
@@ -704,6 +709,8 @@ void DownloadWidget::slot_OnLoadByScatterCanceled()
     main_window_->processing_dialog()->hide();
     ui_->comboBox_scatterFilePath->setEditText("");
     ui_->comboBox_scatterFilePath->setCurrentIndex(-1);
+    ui_->tableWidget->setRowCount(0);
+    main_window_->UpdatePlatformImageString("");
     main_window_->ResetStatus();
 }
 
@@ -1828,18 +1835,73 @@ void DownloadWidget::RomEnabledChanged(int row)
         if(row == QueryROMVisbleIndex("super"))
         {
             int vbmeta_system_idx = main_window_->main_controller()->QueryROMIndex("vbmeta_system");
+            if(vbmeta_system_idx == -1)
+                LOG("no partition vbmeta_system");
             int vbmeta_vendor_idx = main_window_->main_controller()->QueryROMIndex("vbmeta_vendor");
-            int vbmeta_system_visble_idx = QueryROMVisbleIndex("vbmeta_system");
-            int vbmeta_vendor_visble_idx = QueryROMVisbleIndex("vbmeta_vendor");
-            main_window_->main_controller()->EnableROM(vbmeta_system_idx, true);
-            main_window_->main_controller()->EnableROM(vbmeta_vendor_idx, true);
-            ui_->tableWidget->item(vbmeta_system_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
-            ui_->tableWidget->item(vbmeta_vendor_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+            if(vbmeta_vendor_idx == -1)
+                LOG("no partition vbmeta_vendor");
+
+            if(vbmeta_system_idx != -1 && vbmeta_vendor_idx != -1)
+            {
+                int vbmeta_system_visble_idx = QueryROMVisbleIndex("vbmeta_system");
+                int vbmeta_vendor_visble_idx = QueryROMVisbleIndex("vbmeta_vendor");
+                if(vbmeta_system_visble_idx != -1 && vbmeta_vendor_visble_idx != -1)
+                {
+                    main_window_->main_controller()->EnableROM(vbmeta_system_idx, true);
+                    main_window_->main_controller()->EnableROM(vbmeta_vendor_idx, true);
+                    ui_->tableWidget->item(vbmeta_system_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+                    ui_->tableWidget->item(vbmeta_vendor_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+                }
+            }
+
+            //for AB load
+            int vbmeta_system_a_idx = main_window_->main_controller()->QueryROMIndex("vbmeta_system_a");
+            if(vbmeta_system_a_idx == -1)
+                LOG("no partition vbmeta_system_a");
+            int vbmeta_vendor_a_idx = main_window_->main_controller()->QueryROMIndex("vbmeta_vendor_a");
+            if(vbmeta_vendor_a_idx == -1)
+                LOG("no partition vbmeta_vendor_a");
+
+            if(vbmeta_system_a_idx != -1 && vbmeta_vendor_a_idx != -1)
+            {
+                int vbmeta_system_a_visble_idx = QueryROMVisbleIndex("vbmeta_system_a");
+                int vbmeta_vendor_a_visble_idx = QueryROMVisbleIndex("vbmeta_vendor_a");
+                if(vbmeta_system_a_visble_idx != -1 && vbmeta_vendor_a_visble_idx != -1)
+                {
+                    main_window_->main_controller()->EnableROM(vbmeta_system_a_idx, true);
+                    main_window_->main_controller()->EnableROM(vbmeta_vendor_a_idx, true);
+                    ui_->tableWidget->item(vbmeta_system_a_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+                    ui_->tableWidget->item(vbmeta_vendor_a_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+                }
+            }
+
+            int vbmeta_system_b_idx = main_window_->main_controller()->QueryROMIndex("vbmeta_system_b");
+            if(vbmeta_system_b_idx == -1)
+                LOG("no partition vbmeta_system_b");
+            int vbmeta_vendor_b_idx = main_window_->main_controller()->QueryROMIndex("vbmeta_vendor_b");
+            if(vbmeta_vendor_b_idx == -1)
+                LOG("no paritition vbmeta_vendor_b");
+
+            if(vbmeta_system_b_idx != -1 && vbmeta_vendor_b_idx != -1)
+            {
+                int vbmeta_system_b_visble_idx = QueryROMVisbleIndex("vbmeta_system_b");
+                int vbmeta_vendor_b_visble_idx = QueryROMVisbleIndex("vbmeta_vendor_b");
+                if(vbmeta_system_b_visble_idx != -1 && vbmeta_vendor_b_visble_idx != -1)
+                {
+                    main_window_->main_controller()->EnableROM(vbmeta_system_b_idx, true);
+                    main_window_->main_controller()->EnableROM(vbmeta_vendor_b_idx, true);
+                    ui_->tableWidget->item(vbmeta_system_b_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+                    ui_->tableWidget->item(vbmeta_vendor_b_visble_idx, ColumnEnable)->setCheckState(Qt::Checked);
+                }
+            }
+            //end of AB load process
         }
     }
     else
     {
-        if(row == QueryROMVisbleIndex("vbmeta_system") || row == QueryROMVisbleIndex("vbmeta_vendor"))
+        if(row == QueryROMVisbleIndex("vbmeta_system") || row == QueryROMVisbleIndex("vbmeta_vendor")
+           ||row == QueryROMVisbleIndex("vbmeta_system_a") || row == QueryROMVisbleIndex("vbmeta_vendor_a")
+           ||row == QueryROMVisbleIndex("vbmeta_system_b") || row == QueryROMVisbleIndex("vbmeta_vendor_b"))
         {
             int super_idx = QueryROMVisbleIndex("super");
             bool super_enable = ui_->tableWidget->item(super_idx, ColumnEnable)->checkState() == Qt::Checked;

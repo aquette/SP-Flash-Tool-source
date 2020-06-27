@@ -98,6 +98,7 @@ public:
     int GetRSCIndex(std::string rscProjName);
     std::string GetRSCProjectName(void);
     std::string GetRSCOperatorName(std::string rscProjName);
+    std::string GetRSCFilePath(void);
 
     bool GetCertDLToStorage();
 
@@ -162,6 +163,7 @@ private:
 #define MAX_RSC_PROJ_CNT 64
     proj_item m_rsc_p_info[MAX_RSC_PROJ_CNT];
     uint m_rsc_cnt;
+    std::string m_rsc_file_path;
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);

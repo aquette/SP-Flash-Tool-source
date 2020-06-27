@@ -6,6 +6,7 @@
 #include "../Conn/Connection.h"
 #include "../XMLParser/XMLSerializable.h"
 #include "../Logger/Log.h"
+#include "../Utility/Utils.h"
 
 namespace APCore
 {
@@ -17,7 +18,7 @@ public:
     virtual ~ConnSetting();
 
     virtual Connection *CreateConnection(
-            APKey key, HW_StorageType_E stor, bool pwr_key_reset) = 0;
+            APKey key, HW_StorageType_E stor, LongPressRebootOption pwr_key_reset_option) = 0;
 
     void set_stop_flag(int * p_stop)
     {
