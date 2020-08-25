@@ -631,6 +631,19 @@ int FileUtils::SaveFile(const char*filepath, unsigned char*p_buf, unsigned int f
 #if defined(_LINUX)
 void FileUtils::copy_99ttyacms_file(bool need_check_first_run/* = false*/)
 {
+    QString rules_path = QString(RULES_PATH);
+    if (!IsDirectoryExist(rules_path.toStdString())) {
+        LOG("skip to copy 99-ttyacms.rules file, reason: %s is NOT exist!", rules_path.toStdString().c_str());
+        return;
+    }
+
+    QString dest_file = rules_path + QDir::separator().toLatin1() + QString(TTYACMS_FILE);
+    dest_file = QDir::toNativeSeparators(dest_file);
+    if (IsFileExist(dest_file.toStdString())) {
+        LOG("skip to copy 99-ttyacms.rules file, reason: %s has already exist!", dest_file.toStdString().c_str());
+        return;
+    }
+
     if (need_check_first_run) {
         QString history_file = QString::fromStdString(AbsolutePath(std::string(HISTORY_INI_FILE)));
         history_file = QDir::toNativeSeparators(history_file);
@@ -639,27 +652,24 @@ void FileUtils::copy_99ttyacms_file(bool need_check_first_run/* = false*/)
             return;
         }
     }
-    // linux modemmanager issue fixed: copy 99-ttyacms.rules file to /etc/udev/rules.d directory.
+
     QString src_file = QString::fromStdString(AbsolutePath(std::string(TTYACMS_FILE)));
     src_file = QDir::toNativeSeparators(src_file);
-    if (IsFileExist(src_file.toStdString())) {
-        if (IsDirectoryExist(std::string(RULES_PATH)) && QFileInfo(QString(RULES_PATH)).isWritable()) {
-            QString dest_file = QString(RULES_PATH) + QDir::separator().toLatin1() + QString(TTYACMS_FILE);
-            dest_file = QDir::toNativeSeparators(dest_file);
-            if (!IsFileExist(dest_file.toStdString())) {
-                if (QFile::copy(src_file, dest_file)) {
-                    LOG("copy 99-ttyacms.rules file successfully!");
-                } else {
-                    LOG("copy 99-ttyacms.rules file failed, reason: %s", strerror(errno));
-                }
-            } else {
-                LOG("skip to copy 99-ttyacms.rules file, reason: %s has already exist!", dest_file.toStdString().c_str());
-            }
-        } else {
-            LOG("skip to copy 99-ttyacms.rules file, reason: %s has no write permission!", std::string(RULES_PATH).c_str());
-        }
+    if (!IsFileExist(src_file.toStdString())) {
+        LOG("skip to copy 99-ttyacms.rules file, reason: %s NOT exist!", src_file.toStdString().c_str());
+        return;
+    }
+
+    if (!QFileInfo(rules_path).isWritable()) {
+        LOG("skip to copy 99-ttyacms.rules file, reason: %s has no write permission!", rules_path.toStdString().c_str());
+        return;
+    }
+
+    // linux modemmanager issue fixed: copy 99-ttyacms.rules file to /etc/udev/rules.d directory.
+    if (QFile::copy(src_file, dest_file)) {
+        LOG("copy 99-ttyacms.rules file successfully!");
     } else {
-        LOG("skip to copy 99-ttyacms.rules file, reason: %s not exist!", src_file.toStdString().c_str());
+        LOG("copy 99-ttyacms.rules file failed, reason: %s", strerror(errno));
     }
 }
 

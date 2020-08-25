@@ -435,7 +435,7 @@ void ReadBackWidget::UpdateHeadViewCheckState()
 
 bool ReadBackWidget::IsSRAMReadback()
 {
-    return ui_->m_sram_rb_button->isChecked();
+    return ui_->m_sram_rb_button->isVisible() && ui_->m_sram_rb_button->isChecked();
 }
 
 void ReadBackWidget::ShowRAMSelectBtn(bool show)
@@ -852,6 +852,9 @@ void ReadBackWidget::OnScatterChanged(bool showRegion, bool scatter_ver2)
         }
 	}
     addr_dialog_->OnScatterChanged(showRegion, scatter_ver2);
+
+    bool is_advanced_mode = main_window_->main_controller()->advance_on();
+    ShowRAMSelectBtn(is_advanced_mode && (HW_STORAGE_EMMC == storage_ || HW_STORAGE_UFS == storage_));
 }
 
 void ReadBackWidget::ShowReadFlagColumn(bool show)

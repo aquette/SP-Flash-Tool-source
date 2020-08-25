@@ -144,6 +144,7 @@ private:
     void changeDownloadSceneToDefault();
     void updateTableWidgetFlagsByConfig();
     bool checkStateEnabledByConfig() const;
+    void removeCurrentScatterFile();
 
     MainWindow *main_window_;
     Ui::DownloadWidget *ui_;

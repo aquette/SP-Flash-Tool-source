@@ -3,4 +3,4 @@ SP Flash Tool(Linux x64)
 
 Official Release v3.1251.5.103
 
-Copyright 2001-2018 MediaTek Inc.
+Copyright 2001-2020 MediaTek Inc.

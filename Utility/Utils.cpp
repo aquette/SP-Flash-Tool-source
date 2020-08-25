@@ -1176,24 +1176,6 @@ HW_StorageType_E getDeviceStorageType(const DA_REPORT_T *p_da_report)
     }
 }
 
-bool FilePatternContain(QString filename, QString pattern)
-{
-    QFile file(filename);
-    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
-        return false;
-
-    QRegExp reg(pattern);
-    QTextStream in(&file);
-    while(!in.atEnd())
-    {
-        QString line = in.readLine();
-        if(reg.indexIn(line) != -1)
-            return true;
-    }
-
-    return false;
-}
-
 #ifdef _WIN32
 bool IsMoreThanOneProcessByName(const QString &processName)
 {

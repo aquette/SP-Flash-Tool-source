@@ -51,7 +51,7 @@ static int runQtApplication(int argc, char *argv[])
     QSplashScreen splash(pixmap);
     splash.show();
     splash.showMessage("SP Flash Tool is loading...\n\n\n\n\n\n\n\n\n\n\n\n\n"
-                       "   Copyright (c) 2001-2018, MediaTek Inc. All rights reserved."
+                       "   Copyright (c) 2001-2020, MediaTek Inc. All rights reserved."
                        ,Qt::AlignBottom,Qt::gray);
 
     MainWindow w;

@@ -2,11 +2,8 @@
 #include <QFileInfo>
 #include <QDir>
 #include "../Utility/version.h"
-#include "../Utility/Utils.h"
 
-#define INSTALLED_FILES_VENDOR_NAME "installed-files-vendor.txt"
 #define RSC_FILE_NAME "rsc.xml"
-#define RSC_FILE_PATTERN "^\\s+\\d+\\s+/vendor/etc/rsc/\\S+/ro.prop$"
 
 ConsoleMode::CommandSettingValidator::CommandSettingValidator(const ConsoleMode::Config &config,
                                                               const CommandLineArguments &args):
@@ -25,10 +22,12 @@ bool ConsoleMode::CommandSettingValidator::Validate() const
     return this->ValidateRSCSetting();
 }
 
-bool ConsoleMode::CommandSettingValidator::needRSCSetting() const
+bool ConsoleMode::CommandSettingValidator::hasRSCXMLFile() const
 {
-    RSC_EXIST_STATUS_T rsc_exist_status = checkRSCFileStatus();
-    return rsc_exist_status != res_rsc_not_need;
+    QString rsc_file = getRSCFileName();
+
+    //check rsc.xml exist or not
+    return QFileInfo(rsc_file).exists();
 }
 
 bool ConsoleMode::CommandSettingValidator::ValidateRSCSetting() const
@@ -47,16 +46,16 @@ bool ConsoleMode::CommandSettingValidator::ValidateRSCSetting() const
             return true;
         }
     }
+
     if (!m_config.pclGetCommandSetting()->hasDownloadCmd()) {
         if (m_config.pclGetCommandSetting()->hasRSCCmdSetting()) {
             LOGI("rsc commnad exist, but ignore it for it's not a download command!");
         }
         return true;
     }
+
     //RSC only for internal flashtool    
-    RSC_EXIST_STATUS_T rsc_exist_status = checkRSCFileStatus();
-    switch (rsc_exist_status) {
-    case res_rsc_exist:
+    if (this->hasRSCXMLFile()) {
         if (m_config.pclGetCommandSetting()->hasRSCCmdSetting())
         {
             LOGI("rsc file and rsc commnad both exist!");
@@ -75,59 +74,16 @@ bool ConsoleMode::CommandSettingValidator::ValidateRSCSetting() const
             LOGE("rsc file exist, but has no rsc command!");
             return false;
         }
-    case res_rsc_not_exist:
+    } else {
         if (m_config.pclGetCommandSetting()->hasRSCCmdSetting())
         {
-            LOGE("rsc file need but not exist, and has rsc command!!");
+            LOGW("rsc file NOT exist, and has rsc command, but ignore it!");
         }
         else
         {
-            LOGE("rsc file need but not exist, and has no rsc command!!");
-        }
-        return false;
-    case res_rsc_not_need:
-        if (m_config.pclGetCommandSetting()->hasRSCCmdSetting())
-        {
-            LOGW("rsc file no need, and has rsc command, but ignore it!");
-        }
-        else
-        {
-            LOGI("rsc file no need, and has no rsc command!!");
+            LOGI("rsc file NOT exist, and has no rsc command!!");
         }
         return true;
-    default:
-        assert(false);
-        return true;
-    }
-}
-
-ConsoleMode::RSC_EXIST_STATUS_T ConsoleMode::CommandSettingValidator::checkRSCFileStatus() const
-{
-    QString rsc_file = getRSCFileName();
-
-    //check rsc.xml exist or not
-    if (QFileInfo(rsc_file).exists())
-    {
-        LOG("rsc.xml exists!");
-        return res_rsc_exist;
-    }
-    else
-    {
-        LOG("rsc.xml NOT exist");
-        QDir install_files_dir = QFileInfo(rsc_file).dir();
-        QString install_files_name = install_files_dir.absoluteFilePath(INSTALLED_FILES_VENDOR_NAME);
-
-        //installed-files-vendor.txt contains vendor/etc/rsc/xxx/ro.prop, xxx is the project name in rsc.xml
-        if(FilePatternContain(install_files_name, RSC_FILE_PATTERN))
-        {
-            LOG("rsc.xml is in the installed-files-vendor.txt but NOT found");
-            return res_rsc_not_exist;
-        }
-        else
-        {
-            LOG("installed-files-vendor says NO need rsx.xml; or installed-files-vendor NOT exist");
-            return res_rsc_not_need;
-        }
     }
 }
 

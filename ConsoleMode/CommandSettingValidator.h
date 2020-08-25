@@ -7,13 +7,6 @@
 namespace ConsoleMode
 {
 
-typedef enum RSC_EXIST_STATUS
-{
-    res_rsc_not_exist = 0,
-    res_rsc_exist,
-    res_rsc_not_need
-} RSC_EXIST_STATUS_T;
-
 class CommandSettingValidator
 {
 public:
@@ -22,12 +15,10 @@ public:
 
     bool Validate() const;
 
-    bool needRSCSetting() const;
+    bool hasRSCXMLFile() const;
 
 private:
     bool ValidateRSCSetting() const;
-
-    RSC_EXIST_STATUS_T checkRSCFileStatus() const;
     QString getRSCFileName() const;
     bool validRSCIndex() const;
 

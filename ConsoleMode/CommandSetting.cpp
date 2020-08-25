@@ -418,6 +418,7 @@ void CommandSetting::removeRSCSetting()
         if(NULL != rsc_setting)
         {
             m_aclCommandSettings.remove(*it);
+            LOGI("remove RSC command from console mode command list.");
             break;
         }
     }

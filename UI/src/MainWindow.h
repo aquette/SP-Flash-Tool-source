@@ -330,7 +330,6 @@ private:
     QShortcut *mbadblock_shortcut;
     bool mbadblock_on;
     QShortcut *madvance_shortcut;
-    bool madvance_on;
     QShortcut *mbromAdapter_shortcut;
     bool mbromAdapter_on;
     bool msecurity_on;

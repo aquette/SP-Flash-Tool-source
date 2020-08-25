@@ -147,7 +147,7 @@ int ConsoleModeEntry::Run(int argc, char *argv[])
         {
             return -1;
         }
-        if (!cmdSettingValidator.needRSCSetting())
+        if (!cmdSettingValidator.hasRSCXMLFile())
         {
             config.pclGetCommandSetting()->removeRSCSetting();
         }

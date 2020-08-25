@@ -457,15 +457,9 @@ void DownloadWidget::OnLoadRomFailed()
 
 void DownloadWidget::UpdateUIStatus()
 {
-    QString strPath = ui_->comboBox_scatterFilePath->currentText();
-    scatterFile_historyList_.removeOne(strPath);
-    ui_->comboBox_scatterFilePath->removeItem(ui_->comboBox_scatterFilePath->currentIndex());
-    ui_->comboBox_scatterFilePath->setEditText("");
-    ui_->comboBox_scatterFilePath->setCurrentIndex(-1);
-    main_window_->ResetStatus();
+    removeCurrentScatterFile();
 
-    IniItem item("history.ini", "RecentOpenFile", "lastDir");
-    item.SaveStringValue(tr(""));
+    main_window_->ResetStatus();
 
     SetDACheckSum();
 }
@@ -565,90 +559,63 @@ void DownloadWidget::Clear_RSC_Info(void)
     m_rsc_cnt = 0;
 }
 
-#define INSTALLED_FILES_VENDOR_NAME "installed-files-vendor.txt"
-#define RSC_FILE_PATTERN "^\\s+\\d+\\s+/vendor/etc/rsc/\\S+/ro.prop$"
 void DownloadWidget::Process_rsc(QString rsc_filename)
 {
-    if(!ToolInfo::IsCustomerVer())
+    if(ToolInfo::IsCustomerVer())
     {
-        //internal flashtool, check rsc.xml exist or not
-        if(QFileInfo(rsc_filename).exists())
-        {
-            LOG("rsc exist");
-            ShowRSCItem(true);
-            m_rsc_file_path = rsc_filename.toLocal8Bit().constData();
-            LOG("rsc file: %s", m_rsc_file_path.c_str());
+        return ;
+    }
+    //internal flashtool, check rsc.xml exist or not
+    if(QFileInfo(rsc_filename).exists())
+    {
+        LOG("rsc exist");
+        ShowRSCItem(true);
+        m_rsc_file_path = rsc_filename.toLocal8Bit().constData();
+        LOG("rsc file: %s", m_rsc_file_path.c_str());
 
-            try{
-                unsigned int ret = FlashTool_GetRSCCnt(m_rsc_file_path.c_str(), &m_rsc_cnt);
-                if(STATUS_OK != ret)
-                {
-                    char err_msg[512] = {0};
-                    FlashTool_GetLastErrorMessage(NULL, err_msg);
-                    flashtool_message_box(main_window_,
-                                          main_window_->getConnectButton(),
-                                          CRITICAL_MSGBOX,
-                                          "Smart Phone Flash Tool",
-                                          err_msg,
-                                          "OK");
-                    ui_->comboBox_rsc->clear();
-                }
-                LOG("rsc_cnt: %d", m_rsc_cnt);
-                if(m_rsc_cnt > MAX_RSC_PROJ_CNT)
-                {
-                    flashtool_message_box(main_window_,
-                                          main_window_->getConnectButton(),
-                                          CRITICAL_MSGBOX,
-                                          "Smart Phone Flash Tool",
-                                          "rsc_cnt overseed MAX_RSC_PROJ_CNT (64)",
-                                          "OK");
-                    Clear_RSC_Info();
-                    return;
-                }
-                if(m_rsc_cnt == 0)
-                {
-                    flashtool_message_box(main_window_,
-                                          main_window_->getConnectButton(),
-                                          CRITICAL_MSGBOX,
-                                          "Smart Phone Flash Tool",
-                                          "rsc_cnt is 0",
-                                          "OK");
-                    Clear_RSC_Info();
-                    return;
-                }
-
-                ret = FlashTool_GetRSCInfo(m_rsc_file_path.c_str(), m_rsc_p_info, m_rsc_cnt);
-                if(STATUS_OK != ret)
-                {
-                    char err_msg[512] = {0};
-                    FlashTool_GetLastErrorMessage(NULL, err_msg);
-                    flashtool_message_box(main_window_,
-                                          main_window_->getConnectButton(),
-                                          CRITICAL_MSGBOX,
-                                          "Smart Phone Flash Tool",
-                                          err_msg,
-                                          "OK");
-                    Clear_RSC_Info();
-                    return;
-                }
-                Init_RSC_list();
-
-            }catch(const BaseException& exception)
+        try{
+            unsigned int ret = FlashTool_GetRSCCnt(m_rsc_file_path.c_str(), &m_rsc_cnt);
+            if(STATUS_OK != ret)
             {
-                LOGE(exception.err_msg().c_str());
+                char err_msg[512] = {0};
+                FlashTool_GetLastErrorMessage(NULL, err_msg);
+                flashtool_message_box(main_window_,
+                                      main_window_->getConnectButton(),
+                                      CRITICAL_MSGBOX,
+                                      "Smart Phone Flash Tool",
+                                      err_msg,
+                                      "OK");
+                Clear_RSC_Info();
             }
-        }
-        else
-        {
-            LOG("rsc NOT exist");
-            QDir install_files_dir = QFileInfo(rsc_filename).dir();
-            QString install_files_name = install_files_dir.absoluteFilePath(INSTALLED_FILES_VENDOR_NAME);
-
-            //installed-files-vendor.txt contains vendor/etc/rsc/xxx/ro.prop, xxx is the project name in rsc.xml
-            if(FilePatternContain(install_files_name, RSC_FILE_PATTERN))
+            LOG("rsc_cnt: %d", m_rsc_cnt);
+            if(m_rsc_cnt > MAX_RSC_PROJ_CNT)
             {
-                ShowRSCItem(true);
-                char err_msg[512] = {"rsc.xml is missing, please download an integrated load or contact with BM."};
+                flashtool_message_box(main_window_,
+                                      main_window_->getConnectButton(),
+                                      CRITICAL_MSGBOX,
+                                      "Smart Phone Flash Tool",
+                                      "rsc_cnt overseed MAX_RSC_PROJ_CNT (64)",
+                                      "OK");
+                Clear_RSC_Info();
+                return;
+            }
+            if(m_rsc_cnt == 0)
+            {
+                flashtool_message_box(main_window_,
+                                      main_window_->getConnectButton(),
+                                      CRITICAL_MSGBOX,
+                                      "Smart Phone Flash Tool",
+                                      "rsc_cnt is 0",
+                                      "OK");
+                Clear_RSC_Info();
+                return;
+            }
+
+            ret = FlashTool_GetRSCInfo(m_rsc_file_path.c_str(), m_rsc_p_info, m_rsc_cnt);
+            if(STATUS_OK != ret)
+            {
+                char err_msg[512] = {0};
+                FlashTool_GetLastErrorMessage(NULL, err_msg);
                 flashtool_message_box(main_window_,
                                       main_window_->getConnectButton(),
                                       CRITICAL_MSGBOX,
@@ -658,13 +625,14 @@ void DownloadWidget::Process_rsc(QString rsc_filename)
                 Clear_RSC_Info();
                 return;
             }
-            else
-            {
-                LOG("installed-files-vendor says NO need rsx.xml; or installed-files-vendor NOT exist");
-                ShowRSCItem(false);
-            }
+            Init_RSC_list();
 
+        }catch(const BaseException& exception)
+        {
+            LOGE(exception.err_msg().c_str());
         }
+    } else {
+        ShowRSCItem(false);
     }
 }
 
@@ -1698,8 +1666,11 @@ void DownloadWidget::on_comboBox_scatterFilePath_activated(const QString &arg1)
 
     QFile file(file_name);
 
-    if(file_name.isEmpty() || file.exists() == false)
+    if(file_name.isEmpty() || file.exists() == false) {
+        main_window_->slot_show_err(STATUS_SCATTER_FILE_NOT_FOUND, "The scatter file cannot find, please make sure the file is exist before download.");
+        removeCurrentScatterFile();
         return;
+    }
 
     LoadScatterFile(file_name);
 
@@ -2194,6 +2165,18 @@ bool DownloadWidget::checkStateEnabledByConfig() const
         bCheckStateEnabled = false;
     }
     return bCheckStateEnabled;
+}
+
+void DownloadWidget::removeCurrentScatterFile()
+{
+    QString strPath = ui_->comboBox_scatterFilePath->currentText();
+    scatterFile_historyList_.removeOne(strPath);
+    ui_->comboBox_scatterFilePath->removeItem(ui_->comboBox_scatterFilePath->currentIndex());
+    ui_->comboBox_scatterFilePath->setEditText("");
+    ui_->comboBox_scatterFilePath->setCurrentIndex(-1);
+
+    IniItem item("history.ini", "RecentOpenFile", "lastDir");
+    item.SaveStringValue(tr(""));
 }
 
 void DownloadWidget::on_checkbox_set_boot_mode_to_meta_clicked()

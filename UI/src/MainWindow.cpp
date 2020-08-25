@@ -1487,9 +1487,9 @@ void MainWindow::toggleEnableAdvanceMode()
 
     bool isAdvanceMode = main_controller()->advance_on();
 
-    readback_widget->ShowRAMSelectBtn(isAdvanceMode);
-
     HW_StorageType_E storage_type = main_controller_->GetPlatformSetting()->getFlashToolStorageConfig().GetStorageType();
+
+    readback_widget->ShowRAMSelectBtn(isAdvanceMode && (HW_STORAGE_EMMC == storage_type || HW_STORAGE_UFS == storage_type));
 
     format_widget->ShowEraseFlag(isAdvanceMode && storage_type == HW_STORAGE_NAND);
 

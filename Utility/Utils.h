@@ -167,7 +167,6 @@ int flashtool_message_box(QWidget *parent,
                            bool report = false);
 
 HW_StorageType_E getDeviceStorageType(const DA_REPORT_T *p_da_report);
-bool FilePatternContain(QString filename, QString pattern);
 
 
 #ifdef _WIN32

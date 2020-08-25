@@ -144,8 +144,11 @@ typedef	enum {
     MT6873 = 208, //Margaux
     MT0992 = 209, //Colgin
     MT6853 = 210, //Mouton
-    MT0950 = 211, //Petrus_P
-    MT0989 = 212, //Palmer
+    MT6893 = 211, //Petrus_P
+    MT6833 = 212, //Palmer
+    MT8696 = 213, //
+    MT8195 = 214, //
+    MT0959 = 215, //Montrose
 	BBCHIP_TYPE_END,
 	AUTO_DETECT_BBCHIP = 254,
 	UNKNOWN_BBCHIP_TYPE = 255
