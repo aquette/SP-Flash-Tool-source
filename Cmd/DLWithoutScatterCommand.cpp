@@ -60,10 +60,10 @@ void DLWithoutScatterCommand::exec(const QSharedPointer<Connection> &conn){
 
     status = flashtool_download(
                 hs,
-                NULL,
                 flist,
                 part_list_.size(),
-                &cbs);
+                &cbs,
+                NULL);
 
     LOGI("Download result: %s(%d)", StatusToString(status), status);
 

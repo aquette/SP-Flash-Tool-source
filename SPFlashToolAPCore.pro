@@ -232,7 +232,9 @@ SOURCES += \
     UI/src/fw.cpp \
     Cmd/FWCommand.cpp \
     Setting/FWSetting.cpp \
-    Cmd/ICommand.cpp
+    Cmd/ICommand.cpp \
+    Cmd/UFSConfigCommand.cpp \
+    Setting/UFSConfigSetting.cpp
 
 # ONLY Windows related begins here
 win32:SOURCES += Host/Win/RuntimeMemory.cpp \
@@ -454,7 +456,9 @@ HEADERS += \
     UI/src/AsyncUARTComPortInfo.h \
     Setting/FWSetting.h \
     Cmd/FWCommand.h \
-    UI/src/fw.h
+    UI/src/fw.h \
+    Cmd/UFSConfigCommand.h \
+    Setting/UFSConfigSetting.h
 
 win32:HEADERS += UI/src/UpdateDialog.h \
     UI/src/CheckUpdateDialog.h \

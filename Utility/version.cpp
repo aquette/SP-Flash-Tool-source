@@ -33,12 +33,12 @@ static const bool           TEMP_VER     = false;
 static const bool           DEFAULT_ENABLE_LOGS = true;
 
 static const unsigned int  MAJOR_VER        = 5;
-static const unsigned int  MINOR_VER        = 2032;
+static const unsigned int  MINOR_VER        = 2044;
 static const unsigned int  BUILD_NUM        = 00;
 static const unsigned int  BUILD_SN         = 000;
 //Note: REVISION_NUM is commit hash of the tool, should be HEX(0x...)
-static const unsigned int  REVISION_NUM     = 0x525030;
-static const char* const   BUILD_DATE       = "2020/08/11 11:58";
+static const unsigned int  REVISION_NUM     = 0x536568;
+static const char* const   BUILD_DATE       = "2020/11/03 22:13";
 static const char* const   COMMENTS         = "N/A";
 
 static const char* const   APP_NAME         = "MediaTek SP Flash Tool";
