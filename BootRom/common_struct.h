@@ -367,6 +367,8 @@ struct ex_ufs_config
 	uint32 tw_size_gb; // default 0xFFFFFFFF
 	uint32 tw_no_red;  // default 1
 	uint32 hpb_size_gb; //default 0xFFFFFFFF
+	uint32 lu3_size_mb; //default 0
+	uint32 lu3_type;    //default 0
 };
 
 #endif

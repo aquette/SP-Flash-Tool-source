@@ -13,6 +13,8 @@
 #include "../Logger/Log.h"
 #include "../Err/Exception.h"
 #include "../Err/FlashToolErrorCodeDef.h"
+#include "../BootRom/flashtool_handle.h"
+#include <algorithm>
 
 namespace APCore
 {
@@ -55,12 +57,18 @@ bool DLOnlyCommand::CheckPMTLayoutChange(const QSharedPointer<Connection> &conn)
     DL_GetScatterVersion(GET_DL_HANDLE_T(key_), scat_version);
     LOGD("scatter version: %s", scat_version);
 
+    SCATTER_Head_Info scatter_header_info;
+    DL_GetScatterInfo(GET_DL_HANDLE_T(key_), &scatter_header_info);
+
     bool process_combo_check_done = false;
+    bool is_pmt_changed = false;
     for(std::list<ROM_INFO>::const_iterator rom_it = rom_list.begin();
         rom_it != rom_list.end(); ++rom_it)
     {
         const PART_INFO *pmt =
                 proxy.read_pmt(rom_it->name);
+        if (NULL == pmt)
+            continue;
 
         if(std::string(scat_version) == "V1.2.0" || std::string(scat_version) == "V2.2.0" ) //process combo_partsize_check part first
         {
@@ -95,7 +103,19 @@ bool DLOnlyCommand::CheckPMTLayoutChange(const QSharedPointer<Connection> &conn)
             }
         }
 
-        if (pmt != NULL && pmt_is_changed(pmt, *rom_it))
+        std::string image_name = std::string(rom_it->name);
+        std::transform(image_name.begin(), image_name.end(), image_name.begin(), tolower);
+        if (image_name == "userdata" && 
+		scatter_header_info.skip_pmt_operate && !scatter_header_info.resize_check)
+        {
+            is_pmt_changed = is_pmt_start_addr_changed(pmt, *rom_it);
+        } 
+        else
+        {    
+            is_pmt_changed = pmt_is_changed(pmt, *rom_it);
+        }
+
+        if (is_pmt_changed)
         {
 
             if((strstr(rom_it->name, "BMTPOOL")||strstr("BMTPOOL", rom_it->name))

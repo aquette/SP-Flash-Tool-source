@@ -692,6 +692,12 @@ QSharedPointer<APCore::FWSetting> MainWindow::CreateFWSetting()
    return setting;
 }
 
+QSharedPointer<APCore::UFSConfigSetting> MainWindow::CreateUFSConfigSetting()
+{
+   QSharedPointer<APCore::UFSConfigSetting> setting = fw_widget_->CreateUFSConfigSetting();
+   return setting;
+}
+
 QSharedPointer<APCore::ChksumSetting> MainWindow::CreateChksumSetting()
 {
     QSharedPointer<APCore::ChksumSetting> setting(new APCore::ChksumSetting());

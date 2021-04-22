@@ -35,6 +35,7 @@
 #include "../../Setting/PlatformSetting.h"
 #include "../../Setting/DRAMRepairSetting.h"
 #include "../../Setting/FWSetting.h"
+#include "../../Setting/UFSConfigSetting.h"
 #include "../../Conn/Connection.h"
 #include "../../Utility/sendreport.h"
 #include "../../Utility/Utils.h"
@@ -175,6 +176,7 @@ public:
     QSharedPointer<APCore::DeviceTestSetting> CreateDeviceTestSetting();
     QSharedPointer<APCore::WriteMemorySetting> CreateWriteMemorySetting();
     QSharedPointer<APCore::FWSetting> CreateFWSetting();
+    QSharedPointer<APCore::UFSConfigSetting> CreateUFSConfigSetting();
     QSharedPointer<APCore::OTPSetting> CreateOTPSetting();
     QSharedPointer<ISetting> CreateDLSetting();
     QSharedPointer<APCore::SecDLSetting> CreateSecDLSetting();

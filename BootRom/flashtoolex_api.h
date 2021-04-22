@@ -182,9 +182,10 @@ LIBEX_EXPORT status_t LIB_API flashtool_shutdown_device(HSESSION hs, struct rebo
 //!   callbacks: the callback functions used in device operations.
 //!
 //! <b>Returns</b>:  STATUS_OK if success, or other status indicate specified error.
-LIBEX_EXPORT status_t LIB_API flashtool_download(HSESSION hs, const file_info* scatter, 
+LIBEX_EXPORT status_t LIB_API flashtool_download(HSESSION hs,
                                       const struct op_part_list_t* flist, uint32 count
-                                      ,const struct callbacks_struct_t* callbacks);
+                                      ,const struct callbacks_struct_t* callbacks
+                                      ,const struct remote_file_callbacks* remote_cbs);
 
 //! <b>Effects</b>: Upgrade images to device.
 //! Could download images according to scatter file. 

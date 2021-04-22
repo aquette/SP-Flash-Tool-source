@@ -904,6 +904,8 @@ typedef struct {
 	uint32 tw_size_gb; // default 0xFFFFFFFF
 	uint32 tw_no_red;  // default 1
 	uint32 hpb_size_gb; //default 0xFFFFFFFF
+	uint32 lu3_size_mb; //default 0
+	uint32 lu3_type;    //default 0
 }UFS_Config;
 LIBEXPORT int __stdcall FlashTool_SetUFSConfig(FLASHTOOL_API_HANDLE_T  ft_handle, UFS_Config* cfg);
 
@@ -1217,7 +1219,7 @@ LIBEXPORT int __stdcall FlashTool_Device_Control(FLASHTOOL_API_HANDLE_T ft_handl
 /* chipname: in MTxxxx format */
 LIBEXPORT bool __stdcall FlashTool_Chip_isOldArch(const char* chipname);
 
-#define SEC_DATA_MAX_LENGTH 2048
+#define SEC_DATA_MAX_LENGTH 4096
 
 struct ft_sec_str_buffer
 {

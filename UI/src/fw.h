@@ -19,6 +19,7 @@ public:
     explicit FW(QTabWidget *parent,  MainWindow *window);
     DECLARE_TABWIDGET_VFUNCS()
     QSharedPointer<APCore::FWSetting> CreateFWSetting();
+    QSharedPointer<APCore::UFSConfigSetting> CreateUFSConfigSetting();
     ~FW();
     
 private slots:
@@ -27,6 +28,8 @@ private slots:
     void on_pushButton_Stop_clicked();
 
     void on_pushButton_Start_clicked();
+
+    void on_pushButton_Config_clicked();
 
 private:
     MainWindow *main_window_;

@@ -298,6 +298,7 @@ typedef enum device_control_code
     DEV_DA_DRAM_REPAIR,
     DEV_DA_STOR_LIFE_CYCLE_CHECK,
     DEV_DA_GET_ERROR_DETAIL,
+    DEV_DA_DISABLE_SPARSE_ERASE,
     DEV_PL_STAY_STILL = 0x200 
 }device_control_code_e;
 

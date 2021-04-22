@@ -22,9 +22,12 @@
 using XML::Node;
 using XML::Document;
 
-const static std::string phaseOutChips[] = {"MT6573", "MT6575", "MT6577", "MT6589", "MT8135", "MT6775", "MT3967"};
+#define PHASE_OUT_CHIP_CNT 14
 
-const std::set<std::string> g_phaseOutChips(phaseOutChips, phaseOutChips + 7);
+const static std::string phaseOutChips[] = {"MT6573", "MT6575", "MT6577", "MT6589", "MT8135", "MT6775", "MT3967", \
+                                            "MT6572", "MT6582", "MT6592", "MT6752", "MT6571", "MT2601", "MT6795"};
+
+const std::set<std::string> g_phaseOutChips(phaseOutChips, phaseOutChips + PHASE_OUT_CHIP_CNT);
 
 const static std::map<std::string, std::string>::value_type init_values[] = {
     std::map<std::string, std::string>::value_type("MT6573", "v5.1728.00"),
@@ -33,10 +36,17 @@ const static std::map<std::string, std::string>::value_type init_values[] = {
     std::map<std::string, std::string>::value_type("MT6589", "v5.1728.00"),
     std::map<std::string, std::string>::value_type("MT8135", "v5.1728.00"),
     std::map<std::string, std::string>::value_type("MT6775", "v5.1932.00"),
-    std::map<std::string, std::string>::value_type("MT3967", "v5.1932.00")
+    std::map<std::string, std::string>::value_type("MT3967", "v5.1932.00"),
+    std::map<std::string, std::string>::value_type("MT6572", "v5.2032.00"),
+    std::map<std::string, std::string>::value_type("MT6582", "v5.2032.00"),
+    std::map<std::string, std::string>::value_type("MT6592", "v5.2032.00"),
+    std::map<std::string, std::string>::value_type("MT6752", "v5.2032.00"),
+    std::map<std::string, std::string>::value_type("MT6571", "v5.2032.00"),
+    std::map<std::string, std::string>::value_type("MT2601", "v5.2032.00"),
+    std::map<std::string, std::string>::value_type("MT6795", "v5.2032.00")
 };
 
-const static std::map<std::string, std::string> g_phase_out_chip_tool_map(init_values, init_values + 7);
+const static std::map<std::string, std::string> g_phase_out_chip_tool_map(init_values, init_values + PHASE_OUT_CHIP_CNT);
 
 Platform::Platform() : name(), simple_name()
 {

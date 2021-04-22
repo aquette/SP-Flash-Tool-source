@@ -1625,9 +1625,10 @@ typedef struct {
     char storage[64];
     char bootChannel[64];
     U32  blockSize;
-	bool modem_check;
-	char modem[8];
-	bool skip_pmt_operate;
+    bool modem_check;
+    char modem[8];
+    bool skip_pmt_operate;
+    bool resize_check;	
 }SCATTER_Head_Info;
 
 typedef struct {

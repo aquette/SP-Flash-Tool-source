@@ -6,8 +6,11 @@
 #define _rom_length(rom)        \
     ((rom).end_addr - (rom).begin_addr)
 
+#define is_pmt_start_addr_changed(pmt, rom) \
+	((pmt)->begin_addr != (rom).begin_addr)
+
 #define pmt_is_changed(pmt, rom)    \
-    ((pmt)->begin_addr != (rom).begin_addr || \
+    (is_pmt_start_addr_changed(pmt, rom) || \
      (pmt)->image_length != _rom_length(rom) )
 
 
